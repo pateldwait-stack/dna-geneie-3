@@ -757,7 +757,9 @@ export const HomePage: React.FC<HomePageProps> = ({
                   Speak with a DNA GENEIE Specialist
                 </h2>
                 <p className="text-sm sm:text-base text-slate-600 leading-relaxed mt-3">
-                  Need guidance choosing between NutriG, FitG, or Bundle of 2, or have an order question? Contact our clinical genomics desk directly or submit an enquiry below.
+                  {readOnlyCatalog
+                    ? 'Need guidance choosing between NutriG, FitG, or Bundle of 2? Contact our clinical genomics desk using the links below.'
+                    : 'Need guidance choosing between NutriG, FitG, or Bundle of 2, or have an order question? Contact our clinical genomics desk directly or submit an enquiry below.'}
                 </p>
               </div>
 

@@ -525,7 +525,7 @@ export default function App() {
 
       <div className="flex-1">{renderPage()}</div>
 
-      <Footer onNavigate={navigate} />
+      <Footer onNavigate={navigate} readOnlyCatalog={isStaticCatalog} />
 
       {!isStaticCatalog && (
         <>
