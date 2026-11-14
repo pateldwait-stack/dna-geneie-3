@@ -503,11 +503,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-slate-900">
-      {isStaticCatalog && (
-        <div className="bg-amber-50 px-4 py-2 text-center text-xs font-medium text-amber-950">
-          Product catalog preview only. Ordering, accounts, and checkout require a server.
-        </div>
-      )}
       <Navbar
         user={user}
         readOnlyCatalog={isStaticCatalog}
