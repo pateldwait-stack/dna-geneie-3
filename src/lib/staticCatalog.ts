@@ -32,8 +32,6 @@ export const STATIC_CATALOG: {
         'Antioxidant & detoxification enzymatic capacity',
         'Actionable personalized nutrition consultation roadmap',
       ],
-      avg_rating: 4.9,
-      review_count: 0,
     },
     {
       id: 2,
@@ -60,8 +58,6 @@ export const STATIC_CATALOG: {
         'Skin barrier hydration & inflammatory sensitivity traits',
         'Launching soon — register interest for priority access',
       ],
-      avg_rating: 4.9,
-      review_count: 0,
     },
     {
       id: 3,
@@ -88,8 +84,6 @@ export const STATIC_CATALOG: {
         'Exercise-induced oxidative stress & recovery timing',
         'Structured training split & recovery optimization guidance',
       ],
-      avg_rating: 4.9,
-      review_count: 0,
     },
   ],
   bundles: [

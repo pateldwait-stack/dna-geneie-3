@@ -13,7 +13,6 @@ import {
   Package,
   Phone,
   ShieldCheck,
-  Star,
   Tag,
   X,
 } from 'lucide-react';
@@ -82,7 +81,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   const [bannerDismissed, setBannerDismissed] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [availabilityFilter, setAvailabilityFilter] = useState<'all' | 'available' | 'coming_soon'>('all');
-  const [sortBy, setSortBy] = useState<'featured' | 'price_asc' | 'price_desc' | 'rating'>('featured');
+  const [sortBy, setSortBy] = useState<'featured' | 'price_asc' | 'price_desc'>('featured');
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -147,8 +146,6 @@ export const HomePage: React.FC<HomePageProps> = ({
       list = [...list].sort((a, b) => (a.price_inr ?? 999999) - (b.price_inr ?? 999999));
     } else if (sortBy === 'price_desc') {
       list = [...list].sort((a, b) => (b.price_inr ?? 0) - (a.price_inr ?? 0));
-    } else if (sortBy === 'rating') {
-      list = [...list].sort((a, b) => (b.avg_rating || 0) - (a.avg_rating || 0));
     }
     return list;
   }, [products, selectedCategory, availabilityFilter, sortBy, searchQuery]);
@@ -372,7 +369,6 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <option value="featured">Sort: Featured</option>
                 <option value="price_asc">Price: Low to High</option>
                 <option value="price_desc">Price: High to Low</option>
-                <option value="rating">Customer Rating</option>
               </select>
             </div>
           </div>
@@ -439,13 +435,8 @@ export const HomePage: React.FC<HomePageProps> = ({
                     </div>
 
                     <div className="p-6 flex-1 flex flex-col">
-                      <div className="text-xs text-slate-500 flex items-center justify-between gap-2">
+                      <div className="text-xs text-slate-500">
                         <span className="truncate">{product.category}</span>
-                        <span className="inline-flex items-center gap-1 font-mono font-semibold text-[#0B2246] shrink-0">
-                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                          <span>{product.avg_rating || 4.9}</span>
-                          <span className="text-slate-400">({product.review_count || 0})</span>
-                        </span>
                       </div>
 
                       <div className="mt-2 flex items-baseline justify-between gap-4">

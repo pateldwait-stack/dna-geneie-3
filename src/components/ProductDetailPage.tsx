@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, CheckCircle2, Clock, Dna, FlaskConical, Heart, Mail, MessageCircle, Phone, ShieldCheck, Star } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Clock, Dna, FlaskConical, Heart, Mail, MessageCircle, Phone, ShieldCheck } from 'lucide-react';
 import type { ActiveRoute, AuthUser, Bundle, Product, ProductReview } from '../types';
 import { apiFetch, formatINR } from '../lib/api';
 import {
@@ -153,16 +153,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             </div>
 
             <div className="lg:col-span-6 space-y-6">
-              <div className="text-xs font-semibold text-[#0D9488] flex items-center justify-between gap-2">
+              <div className="text-xs font-semibold text-[#0D9488]">
                 <div className="flex items-center gap-2">
                   <span>{product.category}</span>
                   <span aria-hidden="true">·</span>
                   <span className="font-mono">{product.markers_count}</span>
-                </div>
-                <div className="flex items-center gap-1 font-mono text-[#0B2246]">
-                  <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                  <span>{product.avg_rating || 4.9}</span>
-                  <span className="text-slate-400">({reviews.length || product.review_count || 0} reviews)</span>
                 </div>
               </div>
 
@@ -460,11 +455,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           </div>
         </section>
 
-        {/* CUSTOMER REVIEWS & RATINGS */}
+        {/* CUSTOMER REVIEWS */}
         <section className={`pt-10 border-t border-slate-200 ${readOnlyCatalog ? '' : 'grid grid-cols-1 lg:grid-cols-12 gap-10'}`}>
           <div className={readOnlyCatalog ? 'space-y-4' : 'lg:col-span-7 space-y-4'}>
             <h2 className="text-xl font-display font-bold text-[#0B2246]">
-              Customer Reviews & Ratings ({reviews.length})
+              Customer Reviews ({reviews.length})
             </h2>
             {reviews.length === 0 ? (
               <p className="text-sm text-slate-500">No reviews posted yet for {product.name}.</p>
@@ -473,16 +468,6 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 {reviews.map((rev) => (
                   <div key={rev.id} className="p-5 rounded-2xl border border-slate-200 bg-slate-50/40 space-y-2">
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`w-3.5 h-3.5 ${
-                              star <= rev.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'
-                            }`}
-                          />
-                        ))}
-                      </div>
                       <span className="text-xs text-slate-400 font-mono">{rev.created_at.slice(0, 10)}</span>
                     </div>
                     <h3 className="text-sm font-bold text-[#0B2246]">{rev.title}</h3>
