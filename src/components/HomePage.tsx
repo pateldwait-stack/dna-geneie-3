@@ -549,15 +549,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                           .map((s) => (s === 'nutrig' ? 'NutriG' : s === 'fitg' ? 'FitG' : 'DermaG'))
                           .join(' + ')}
                       </span>
-                      {readOnlyCatalog && !isComingSoon ? (
-                        <button
-                          type="button"
-                          onClick={() => onNavigate({ page: 'home' }, 'enquiry')}
-                          className="px-6 py-3 rounded-xl border border-slate-300 text-[#0B2246] text-sm font-semibold hover:bg-slate-50 transition-colors cursor-pointer whitespace-nowrap"
-                        >
-                          Contact Us
-                        </button>
-                      ) : isComingSoon ? (
+                      {isComingSoon ? (
                         <span className="px-3 py-1 rounded-md bg-[#0B2246] text-white text-xs font-bold tracking-wider">
                           COMING SOON
                         </span>
@@ -584,12 +576,22 @@ export const HomePage: React.FC<HomePageProps> = ({
                       </div>
                       <p className="text-xs text-slate-500 mt-1">
                         {isComingSoon
-                          ? 'Available for checkout once DermaG officially launches.'
+                          ? readOnlyCatalog
+                            ? 'Contact us for updates when DermaG launches.'
+                            : 'Available for checkout once DermaG officially launches.'
                           : `Includes NutriG & FitG — saves ${formatINR(bundle.savings_inr)} vs. individual kits.`}
                       </p>
                     </div>
 
-                    {isComingSoon ? (
+                    {readOnlyCatalog && !isComingSoon ? (
+                      <button
+                        type="button"
+                        onClick={() => onNavigate({ page: 'home' }, 'enquiry')}
+                        className="px-6 py-3 rounded-xl border border-slate-300 text-[#0B2246] text-sm font-semibold hover:bg-slate-50 transition-colors cursor-pointer whitespace-nowrap"
+                      >
+                        Contact Us
+                      </button>
+                    ) : isComingSoon ? (
                       <button
                         type="button"
                         disabled
