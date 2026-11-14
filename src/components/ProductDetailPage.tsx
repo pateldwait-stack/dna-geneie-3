@@ -18,6 +18,7 @@ interface ProductDetailPageProps {
   product: Product;
   allProducts: Product[];
   bundles: Bundle[];
+  readOnlyCatalog: boolean;
   user: AuthUser | null;
   wishlistSlugs: string[];
   onToggleWishlist: (slug: string) => void;
@@ -31,6 +32,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   product,
   allProducts,
   bundles,
+  readOnlyCatalog,
   user,
   wishlistSlugs,
   onToggleWishlist,
@@ -64,8 +66,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
   useEffect(() => {
     onViewedProduct(product.slug);
-    loadReviews();
-  }, [product.slug]);
+    if (!readOnlyCatalog) loadReviews();
+  }, [product.slug, readOnlyCatalog]);
 
   const handleWaitlist = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,6 +108,19 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
   const relatedProducts = allProducts.filter((p) => p.slug !== product.slug);
   const bundle2 = bundles.find((b) => b.slug === 'bundle-2' && b.status === 'available');
+  const handleExploreReport = () => {
+    if (readOnlyCatalog) {
+      onNavigate({ page: 'home' }, 'enquiry');
+      return;
+    }
+
+    onBuyNow({
+      itemType: 'product',
+      slug: product.slug,
+      name: product.name,
+      unitPriceInr: product.price_inr || 40000,
+    });
+  };
 
   return (
     <main className="bg-white py-12 lg:py-16">
@@ -158,14 +173,16 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   </h1>
                   <p className="text-lg text-slate-600 mt-2">{product.tagline}</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => onToggleWishlist(product.slug)}
-                  aria-label="Toggle wishlist"
-                  className="p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer shrink-0"
-                >
-                  <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-rose-600 text-rose-600' : 'text-slate-500'}`} />
-                </button>
+                {!readOnlyCatalog && (
+                  <button
+                    type="button"
+                    onClick={() => onToggleWishlist(product.slug)}
+                    aria-label="Toggle wishlist"
+                    className="p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer shrink-0"
+                  >
+                    <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-rose-600 text-rose-600' : 'text-slate-500'}`} />
+                  </button>
+                )}
               </div>
 
               <div className="py-4 border-y border-slate-200 flex items-center justify-between gap-4">
@@ -230,7 +247,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 </ul>
               </div>
 
-              {!isComingSoon ? (
+              {readOnlyCatalog ? (
+                <p className="pt-4 text-sm text-slate-600">
+                  This GitHub Pages catalog is for product information only. Contact us for ordering details.
+                </p>
+              ) : !isComingSoon ? (
                 <div className="pt-4 flex flex-wrap gap-3">
                   <button
                     type="button"
@@ -273,7 +294,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   <p className="text-sm text-slate-600">
                     {product.name} is currently in final pre-launch preparation and cannot be purchased yet. Leave your contact details to be notified when it launches.
                   </p>
-                  {waitlistDone ? (
+                  {readOnlyCatalog ? (
+                    <p className="text-sm text-slate-600">
+                      Contact us directly for launch updates.
+                    </p>
+                  ) : waitlistDone ? (
                     <p className="text-sm font-semibold text-teal-800 bg-teal-50 border border-teal-200 rounded-lg px-4 py-2.5">
                       Thank you! You are registered for {product.name} launch updates.
                     </p>
@@ -354,34 +379,20 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
         </div>
 
         {product.slug === 'nutrig' && (
-          <NutritionParametersSection
-            onExploreReport={() =>
-              onBuyNow({
-                itemType: 'product',
-                slug: product.slug,
-                name: product.name,
-                unitPriceInr: product.price_inr || 40000,
-              })
-            }
-          />
+          <NutritionParametersSection onExploreReport={handleExploreReport} />
         )}
 
         {product.slug === 'fitg' && (
-          <FitnessParametersSection
-            onExploreReport={() =>
-              onBuyNow({
-                itemType: 'product',
-                slug: product.slug,
-                name: product.name,
-                unitPriceInr: product.price_inr || 40000,
-              })
-            }
-          />
+          <FitnessParametersSection onExploreReport={handleExploreReport} />
         )}
 
         {product.slug === 'dermag' && (
           <SkinParametersSection
             onExploreReport={() => {
+              if (readOnlyCatalog) {
+                onNavigate({ page: 'home' }, 'enquiry');
+                return;
+              }
               if (isComingSoon) {
                 const waitlist = document.getElementById('skin-waitlist');
                 if (waitlist) {
@@ -405,7 +416,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
         <section className="pt-10 border-t border-slate-200 space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h2 className="text-xl font-display font-bold text-[#0B2246]">Related Panels & Bundle Offer</h2>
-            {bundle2 && !isComingSoon && (
+            {bundle2 && !isComingSoon && !readOnlyCatalog && (
               <button
                 type="button"
                 onClick={() =>
@@ -450,8 +461,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
         </section>
 
         {/* CUSTOMER REVIEWS & RATINGS */}
-        <section className="pt-10 border-t border-slate-200 grid grid-cols-1 lg:grid-cols-12 gap-10">
-          <div className="lg:col-span-7 space-y-4">
+        <section className={`pt-10 border-t border-slate-200 ${readOnlyCatalog ? '' : 'grid grid-cols-1 lg:grid-cols-12 gap-10'}`}>
+          <div className={readOnlyCatalog ? 'space-y-4' : 'lg:col-span-7 space-y-4'}>
             <h2 className="text-xl font-display font-bold text-[#0B2246]">
               Customer Reviews & Ratings ({reviews.length})
             </h2>
@@ -485,7 +496,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             )}
           </div>
 
-          <div className="lg:col-span-5">
+          {!readOnlyCatalog && <div className="lg:col-span-5">
             <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-4">
               <h3 className="text-base font-display font-bold text-[#0B2246]">Write a Customer Review</h3>
               {user?.role === 'member' ? (
@@ -548,7 +559,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 </div>
               )}
             </div>
-          </div>
+          </div>}
         </section>
       </div>
     </main>

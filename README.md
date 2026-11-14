@@ -14,6 +14,14 @@ npm run dev
 
 Open the local URL printed by the development server.
 
+## GitHub Pages catalog preview
+
+GitHub Pages can display the static, read-only product catalog and product detail
+pages. It cannot run the Node.js API, SQLite database, checkout, accounts, reviews,
+or admin tools. The `Deploy catalog to GitHub Pages` workflow builds and publishes
+the catalog when changes are pushed to `main`. Enable **Settings → Pages → Build
+and deployment → GitHub Actions** in the repository.
+
 ## Deploy to GoDaddy cPanel Node.js hosting
 
 This is a full-stack Node.js application. Its website, API, authentication, checkout, and admin features require a Node.js application host; uploading only the `dist` folder to static hosting will not provide those backend features. Use a GoDaddy hosting plan that provides cPanel's **Setup Node.js App** (or equivalent) and Node.js 20.19+ or 22.12+.

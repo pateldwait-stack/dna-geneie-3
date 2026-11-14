@@ -33,15 +33,15 @@ import { UsaFlagIcon } from './BrandLogo';
 
 const HERO_SLIDES = [
   {
-    src: '/assets/images/hero-lab-microscope.jpeg',
+    src: `${import.meta.env.BASE_URL}assets/images/hero-lab-microscope.jpeg`,
     alt: 'Microscope and modern laboratory equipment',
   },
   {
-    src: '/assets/images/hero-lab-scientist.jpeg',
+    src: `${import.meta.env.BASE_URL}assets/images/hero-lab-scientist.jpeg`,
     alt: 'Laboratory scientist working with DNA samples',
   },
   {
-    src: '/assets/images/hero-genetic-report.jpeg',
+    src: `${import.meta.env.BASE_URL}assets/images/hero-genetic-report.jpeg`,
     alt: 'Genetic testing report and DNA collection kit on a wooden table',
   },
 ] as const;
@@ -57,6 +57,7 @@ interface HomePageProps {
   bundles: Bundle[];
   promos: PromoOffer[];
   usaLabSectionPublished: boolean;
+  readOnlyCatalog: boolean;
   searchQuery: string;
   wishlistSlugs: string[];
   recentlyViewedSlugs: string[];
@@ -70,6 +71,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   bundles,
   promos,
   usaLabSectionPublished,
+  readOnlyCatalog,
   searchQuery,
   wishlistSlugs,
   recentlyViewedSlugs,
@@ -245,14 +247,16 @@ export const HomePage: React.FC<HomePageProps> = ({
                   <span>Shop DNA Panels</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
-                <button
-                  type="button"
-                  onClick={() => onNavigate({ page: 'portal-select' })}
-                  className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl border border-slate-300 bg-white text-[#0B2246] font-semibold text-sm hover:bg-slate-50 transition-colors cursor-pointer"
-                >
-                  <Lock className="w-4 h-4 text-[#0D9488]" />
-                  <span>Member & Advisor Portals</span>
-                </button>
+                {!readOnlyCatalog && (
+                  <button
+                    type="button"
+                    onClick={() => onNavigate({ page: 'portal-select' })}
+                    className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl border border-slate-300 bg-white text-[#0B2246] font-semibold text-sm hover:bg-slate-50 transition-colors cursor-pointer"
+                  >
+                    <Lock className="w-4 h-4 text-[#0D9488]" />
+                    <span>Member & Advisor Portals</span>
+                  </button>
+                )}
               </div>
             </motion.div>
 
@@ -416,14 +420,16 @@ export const HomePage: React.FC<HomePageProps> = ({
                         onClick={() => onNavigate({ page: 'product', slug: product.slug })}
                         className={`w-full h-full object-contain cursor-pointer ${isComingSoon ? 'opacity-85' : ''}`}
                       />
-                      <button
-                        type="button"
-                        onClick={() => onToggleWishlist(product.slug)}
-                        aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
-                        className="absolute top-3 left-3 w-9 h-9 rounded-full bg-white/95 border border-slate-200 flex items-center justify-center text-slate-700 hover:text-rose-600 cursor-pointer"
-                      >
-                        <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-rose-600 text-rose-600' : ''}`} />
-                      </button>
+                      {!readOnlyCatalog && (
+                        <button
+                          type="button"
+                          onClick={() => onToggleWishlist(product.slug)}
+                          aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
+                          className="absolute top-3 left-3 w-9 h-9 rounded-full bg-white/95 border border-slate-200 flex items-center justify-center text-slate-700 hover:text-rose-600 cursor-pointer"
+                        >
+                          <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-rose-600 text-rose-600' : ''}`} />
+                        </button>
+                      )}
 
                       {isComingSoon && (
                         <div className="absolute top-3 right-3 px-3 py-1 rounded-md bg-[#0B2246] text-white text-xs font-bold tracking-wider">
@@ -475,7 +481,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                       )}
 
                       <div className="mt-5 pt-4 border-t border-slate-100 flex items-center gap-3">
-                        {isComingSoon ? (
+                        {!readOnlyCatalog && isComingSoon ? (
                           <button
                             type="button"
                             disabled
@@ -483,7 +489,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                           >
                             Coming Soon
                           </button>
-                        ) : (
+                        ) : !readOnlyCatalog ? (
                           <button
                             type="button"
                             onClick={() =>
@@ -498,7 +504,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                           >
                             Add to Cart
                           </button>
-                        )}
+                        ) : null}
                         <button
                           type="button"
                           onClick={() => onNavigate({ page: 'product', slug: product.slug })}
@@ -543,7 +549,15 @@ export const HomePage: React.FC<HomePageProps> = ({
                           .map((s) => (s === 'nutrig' ? 'NutriG' : s === 'fitg' ? 'FitG' : 'DermaG'))
                           .join(' + ')}
                       </span>
-                      {isComingSoon ? (
+                      {readOnlyCatalog && !isComingSoon ? (
+                        <button
+                          type="button"
+                          onClick={() => onNavigate({ page: 'home' }, 'enquiry')}
+                          className="px-6 py-3 rounded-xl border border-slate-300 text-[#0B2246] text-sm font-semibold hover:bg-slate-50 transition-colors cursor-pointer whitespace-nowrap"
+                        >
+                          Contact Us
+                        </button>
+                      ) : isComingSoon ? (
                         <span className="px-3 py-1 rounded-md bg-[#0B2246] text-white text-xs font-bold tracking-wider">
                           COMING SOON
                         </span>
@@ -818,10 +832,19 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
 
             <div className="lg:col-span-7">
-              <form
-                onSubmit={handleEnquirySubmit}
-                className="p-6 sm:p-8 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-4"
-              >
+              {readOnlyCatalog ? (
+                <div className="p-6 sm:p-8 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-4">
+                  <h3 className="text-lg font-display font-bold text-[#0B2246]">Contact DNA GENEIE</h3>
+                  <p className="text-sm text-slate-600">
+                    The GitHub Pages catalog does not accept online enquiries. Please use the email,
+                    phone, or WhatsApp links shown here to contact us.
+                  </p>
+                </div>
+              ) : (
+                <form
+                  onSubmit={handleEnquirySubmit}
+                  className="p-6 sm:p-8 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-4"
+                >
                 <div className="pb-1">
                   <h3 className="text-lg font-display font-bold text-[#0B2246]">Send a Customer Enquiry</h3>
                   <p className="text-xs text-slate-500 mt-0.5">
@@ -930,7 +953,8 @@ export const HomePage: React.FC<HomePageProps> = ({
                 >
                   {enquirySubmitting ? 'Sending Enquiry...' : 'Submit Customer Enquiry'}
                 </button>
-              </form>
+                </form>
+              )}
             </div>
           </div>
         </div>

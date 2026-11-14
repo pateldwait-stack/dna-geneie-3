@@ -14,10 +14,12 @@ import { AuthPortals } from './components/AuthPortals';
 import { MemberDashboard } from './components/MemberDashboard';
 import { AdvisorDashboard } from './components/AdvisorDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
+import { STATIC_CATALOG } from './lib/staticCatalog';
 
 const CART_STORAGE_KEY = 'dnageneie_cart_v1';
 const WISHLIST_STORAGE_KEY = 'dnageneie_wishlist_v1';
 const RECENT_STORAGE_KEY = 'dnageneie_recent_v1';
+const isStaticCatalog = import.meta.env.BASE_URL === '/dna-geneie-3/';
 
 function parseHashRoute(): ActiveRoute {
   const raw = window.location.hash.replace(/^#/, '');
@@ -117,6 +119,14 @@ export default function App() {
   });
 
   const loadCatalog = async () => {
+    if (isStaticCatalog) {
+      setProducts(STATIC_CATALOG.products);
+      setBundles(STATIC_CATALOG.bundles);
+      setPromos(STATIC_CATALOG.promos);
+      setUsaLabSectionPublished(STATIC_CATALOG.usaLabSectionPublished);
+      return;
+    }
+
     try {
       const res = await apiFetch<{
         products: Product[];
@@ -145,6 +155,11 @@ export default function App() {
   };
 
   const loadSession = async () => {
+    if (isStaticCatalog) {
+      setAuthChecked(true);
+      return;
+    }
+
     try {
       const res = await apiFetch<{ user: AuthUser | null }>('/api/auth/me');
       setUser(res.user || null);
@@ -336,6 +351,29 @@ export default function App() {
   const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
 
   const renderPage = () => {
+    if (
+      isStaticCatalog &&
+      route.page !== 'home' &&
+      route.page !== 'product' &&
+      route.page !== 'support'
+    ) {
+      return (
+        <main className="flex-1 px-4 py-20 text-center">
+          <h1 className="text-2xl font-display font-bold text-[#0B2246]">Catalog preview only</h1>
+          <p className="mt-3 text-slate-600">
+            Accounts, checkout, and other server features are not available on GitHub Pages.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate({ page: 'home' }, 'tests')}
+            className="mt-6 px-5 py-3 rounded-xl dna-gradient-bg text-white text-sm font-semibold"
+          >
+            Browse DNA panels
+          </button>
+        </main>
+      );
+    }
+
     if (route.page === 'product') {
       const prod = products.find((p) => p.slug === route.slug);
       if (prod) {
@@ -344,6 +382,7 @@ export default function App() {
             product={prod}
             allProducts={products}
             bundles={bundles}
+            readOnlyCatalog={isStaticCatalog}
             user={user}
             wishlistSlugs={wishlistSlugs}
             onToggleWishlist={handleToggleWishlist}
@@ -451,6 +490,7 @@ export default function App() {
         bundles={bundles}
         promos={promos}
         usaLabSectionPublished={usaLabSectionPublished}
+        readOnlyCatalog={isStaticCatalog}
         searchQuery={searchQuery}
         wishlistSlugs={wishlistSlugs}
         recentlyViewedSlugs={recentlyViewedSlugs}
@@ -463,8 +503,14 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-slate-900">
+      {isStaticCatalog && (
+        <div className="bg-amber-50 px-4 py-2 text-center text-xs font-medium text-amber-950">
+          Product catalog preview only. Ordering, accounts, and checkout require a server.
+        </div>
+      )}
       <Navbar
         user={user}
+        readOnlyCatalog={isStaticCatalog}
         products={products}
         bundles={bundles}
         cartCount={cartCount}
@@ -481,28 +527,32 @@ export default function App() {
 
       <Footer onNavigate={navigate} />
 
-      <CartDrawer
-        open={cartOpen}
-        items={cart}
-        bundles={bundles}
-        onClose={() => setCartOpen(false)}
-        onUpdateQty={handleUpdateQty}
-        onRemoveItem={handleRemoveItem}
-        onCheckout={() => {
-          setCartOpen(false);
-          navigate({ page: 'checkout' });
-        }}
-      />
+      {!isStaticCatalog && (
+        <>
+          <CartDrawer
+            open={cartOpen}
+            items={cart}
+            bundles={bundles}
+            onClose={() => setCartOpen(false)}
+            onUpdateQty={handleUpdateQty}
+            onRemoveItem={handleRemoveItem}
+            onCheckout={() => {
+              setCartOpen(false);
+              navigate({ page: 'checkout' });
+            }}
+          />
 
-      <WishlistDrawer
-        open={wishlistOpen}
-        wishlistSlugs={wishlistSlugs}
-        products={products}
-        onClose={() => setWishlistOpen(false)}
-        onToggleWishlist={handleToggleWishlist}
-        onAddToCart={handleAddToCart}
-        onNavigate={navigate}
-      />
+          <WishlistDrawer
+            open={wishlistOpen}
+            wishlistSlugs={wishlistSlugs}
+            products={products}
+            onClose={() => setWishlistOpen(false)}
+            onToggleWishlist={handleToggleWishlist}
+            onAddToCart={handleAddToCart}
+            onNavigate={navigate}
+          />
+        </>
+      )}
 
       <WhatsAppButton />
     </div>

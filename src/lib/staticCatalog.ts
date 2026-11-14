@@ -1,0 +1,125 @@
+import type { Bundle, Product, PromoOffer } from '../types';
+
+export const STATIC_CATALOG: {
+  products: Product[];
+  bundles: Bundle[];
+  promos: PromoOffer[];
+  usaLabSectionPublished: boolean;
+} = {
+  products: [
+    {
+      id: 1,
+      slug: 'nutrig',
+      name: 'NutriG',
+      category: 'Nutrition & Nutrigenomics',
+      tagline: 'Personalized nutritional genomics for metabolic precision',
+      description:
+        'NutriG analyzes key nutrigenomic markers governing macronutrient metabolism, vitamin absorption, caffeine and lactose sensitivity, antioxidant defense, and glycemic response to guide targeted dietary planning.',
+      price_inr: 40000,
+      original_price_inr: 44000,
+      status: 'available',
+      is_active: 1,
+      stock_count: 150,
+      offer_label: 'Free Pan-India Kit Delivery & Pickup',
+      markers_count: '140+ Nutritional Variants',
+      turnaround_days: '3–4 Weeks after Lab Receipt',
+      sample_type: 'Non-invasive Buccal Cheek Swab',
+      image_url: '/assets/images/product_nutrig_kit_1794562665944.jpg',
+      highlights: [
+        'Macronutrient utilization & carbohydrate sensitivity',
+        'Micronutrient & B-vitamin / Vitamin D absorption pathways',
+        'Food intolerances (lactose, gluten predisposition, caffeine)',
+        'Antioxidant & detoxification enzymatic capacity',
+        'Actionable personalized nutrition consultation roadmap',
+      ],
+      avg_rating: 4.9,
+      review_count: 0,
+    },
+    {
+      id: 2,
+      slug: 'dermag',
+      name: 'DermaG',
+      category: 'Skin Health & Dermagenomics',
+      tagline: 'Genetic insights for skin longevity, barrier health, and targeted skincare',
+      description:
+        'DermaG evaluates genetic predispositions related to collagen synthesis, oxidative stress defense, pigmentation response, hydration retention, and sensitivity to support personalized dermatological care.',
+      price_inr: null,
+      original_price_inr: null,
+      status: 'coming_soon',
+      is_active: 1,
+      stock_count: 0,
+      offer_label: 'Pre-Launch Priority Waitlist Open',
+      markers_count: '95+ Skin Biology Variants',
+      turnaround_days: '3–4 Weeks after Lab Receipt',
+      sample_type: 'Non-invasive Buccal Cheek Swab',
+      image_url: '/assets/images/product_dermag_kit_1794562667120.jpg',
+      highlights: [
+        'Collagen remodeling & elasticity genetic profile',
+        'Photo-aging & UV oxidative resilience markers',
+        'Melanin regulation & hyperpigmentation propensity',
+        'Skin barrier hydration & inflammatory sensitivity traits',
+        'Launching soon — register interest for priority access',
+      ],
+      avg_rating: 4.9,
+      review_count: 0,
+    },
+    {
+      id: 3,
+      slug: 'fitg',
+      name: 'FitG',
+      category: 'Fitness & Athletic Genomics',
+      tagline: 'Train with your physiology across power, endurance, and recovery',
+      description:
+        'FitG examines genetic markers associated with muscle fiber composition, VO2 max trainability, tendon and ligament resilience, post-exercise inflammation, and recovery kinetics for structured athletic programming.',
+      price_inr: 40000,
+      original_price_inr: 44000,
+      status: 'available',
+      is_active: 1,
+      stock_count: 150,
+      offer_label: 'Free Pan-India Kit Delivery & Pickup',
+      markers_count: '120+ Performance Variants',
+      turnaround_days: '3–4 Weeks after Lab Receipt',
+      sample_type: 'Non-invasive Buccal Cheek Swab',
+      image_url: '/assets/images/product_fitg_kit_1794562669093.jpg',
+      highlights: [
+        'Power vs. endurance muscle fiber predisposition (ACTN3 / ACE)',
+        'Aerobic capacity & cardiovascular training response',
+        'Soft-tissue, tendon & joint injury risk mitigation',
+        'Exercise-induced oxidative stress & recovery timing',
+        'Structured training split & recovery optimization guidance',
+      ],
+      avg_rating: 4.9,
+      review_count: 0,
+    },
+  ],
+  bundles: [
+    {
+      id: 1,
+      slug: 'bundle-2',
+      name: 'Bundle of 2 (NutriG + FitG)',
+      description:
+        'Comprehensive Nutrition & Athletic Performance genomic combination pairing both currently available DNA testing panels.',
+      included_product_slugs: ['nutrig', 'fitg'],
+      price_inr: 75000,
+      individual_total_inr: 80000,
+      savings_inr: 5000,
+      status: 'available',
+      is_active: 1,
+    },
+    {
+      id: 2,
+      slug: 'bundle-3',
+      name: 'Bundle of 3 (NutriG + DermaG + FitG)',
+      description:
+        'Complete three-panel genomic suite covering Nutrition, Skin Health, and Fitness. Available once DermaG officially launches.',
+      included_product_slugs: ['nutrig', 'dermag', 'fitg'],
+      price_inr: 110000,
+      individual_total_inr: 120000,
+      savings_inr: 10000,
+      status: 'coming_soon',
+      is_active: 1,
+    },
+  ],
+  promos: [],
+  usaLabSectionPublished: false,
+};

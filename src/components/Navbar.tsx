@@ -14,6 +14,7 @@ import { BrandLogo } from './BrandLogo';
 
 interface NavbarProps {
   user: AuthUser | null;
+  readOnlyCatalog: boolean;
   products: Product[];
   bundles: Bundle[];
   cartCount: number;
@@ -28,6 +29,7 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({
   user,
+  readOnlyCatalog,
   products,
   bundles,
   cartCount,
@@ -207,62 +209,66 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Zone 3: Wishlist, Cart, Account */}
         <div className="flex items-center gap-2.5 shrink-0">
-          <button
-            type="button"
-            onClick={onOpenWishlist}
-            className="relative inline-flex items-center gap-1.5 px-2.5 py-2 text-sm font-medium text-slate-700 hover:text-[#0B2246] border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-            aria-label="Open Wishlist"
-          >
-            <Heart className="w-4 h-4 text-[#0D9488]" />
-            {wishlistCount > 0 && (
-              <span className="inline-flex items-center justify-center min-w-[18px] h-4.5 px-1 text-[11px] font-mono font-semibold text-white bg-[#0D9488] rounded-md tabular-nums">
-                {wishlistCount}
-              </span>
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={onOpenCart}
-            className="relative inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:text-[#0B2246] border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-            aria-label="Open Shopping Cart"
-          >
-            <ShoppingBag className="w-4 h-4 text-[#0D9488]" />
-            <span className="hidden sm:inline">Cart</span>
-            {cartCount > 0 && (
-              <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-mono font-semibold text-white bg-[#0B2246] rounded-md tabular-nums">
-                {cartCount}
-              </span>
-            )}
-          </button>
-
-          {user ? (
-            <div className="hidden sm:flex items-center gap-2">
+          {!readOnlyCatalog && (
+            <>
               <button
                 type="button"
-                onClick={goToDashboard}
-                className="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-semibold text-white bg-[#0B2246] hover:bg-[#133366] rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                onClick={onOpenWishlist}
+                className="relative inline-flex items-center gap-1.5 px-2.5 py-2 text-sm font-medium text-slate-700 hover:text-[#0B2246] border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                aria-label="Open Wishlist"
               >
-                <User className="w-4 h-4 text-teal-300" />
-                <span className="max-w-[120px] truncate">{user.full_name}</span>
+                <Heart className="w-4 h-4 text-[#0D9488]" />
+                {wishlistCount > 0 && (
+                  <span className="inline-flex items-center justify-center min-w-[18px] h-4.5 px-1 text-[11px] font-mono font-semibold text-white bg-[#0D9488] rounded-md tabular-nums">
+                    {wishlistCount}
+                  </span>
+                )}
               </button>
+
               <button
                 type="button"
-                onClick={onLogout}
-                className="px-2.5 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                onClick={onOpenCart}
+                className="relative inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:text-[#0B2246] border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                aria-label="Open Shopping Cart"
               >
-                Sign Out
+                <ShoppingBag className="w-4 h-4 text-[#0D9488]" />
+                <span className="hidden sm:inline">Cart</span>
+                {cartCount > 0 && (
+                  <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-mono font-semibold text-white bg-[#0B2246] rounded-md tabular-nums">
+                    {cartCount}
+                  </span>
+                )}
               </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => onNavigate({ page: 'portal-select' })}
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white dna-gradient-bg hover:opacity-95 rounded-lg transition-opacity whitespace-nowrap shrink-0 cursor-pointer"
-            >
-              <User className="w-4 h-4" />
-              <span>Login / Account</span>
-            </button>
+
+              {user ? (
+                <div className="hidden sm:flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={goToDashboard}
+                    className="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-semibold text-white bg-[#0B2246] hover:bg-[#133366] rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                  >
+                    <User className="w-4 h-4 text-teal-300" />
+                    <span className="max-w-[120px] truncate">{user.full_name}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onLogout}
+                    className="px-2.5 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => onNavigate({ page: 'portal-select' })}
+                  className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white dna-gradient-bg hover:opacity-95 rounded-lg transition-opacity whitespace-nowrap shrink-0 cursor-pointer"
+                >
+                  <User className="w-4 h-4" />
+                  <span>Login / Account</span>
+                </button>
+              )}
+            </>
           )}
 
           <button
@@ -364,7 +370,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>WhatsApp Us ({OFFICIAL_PHONE_DISPLAY})</span>
             </a>
           </div>
-          <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
+          {!readOnlyCatalog && (
+            <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
             {user ? (
               <>
                 <button
@@ -400,7 +407,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 Login / Account
               </button>
             )}
-          </div>
+            </div>
+          )}
         </div>
       )}
     </header>

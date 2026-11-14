@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "tsx server.ts",
     "build": "vite build && esbuild server.ts --bundle --platform=node --format=esm --packages=external --outfile=server.mjs",
+    "build:pages": "vite build --base=/dna-geneie-3/",
     "start": "node app.js",
     "clean": "rm -rf dist server.mjs",
     "lint": "tsc --noEmit"
