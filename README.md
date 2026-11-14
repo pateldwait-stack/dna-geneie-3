@@ -18,7 +18,7 @@ Open the local URL printed by the development server.
 
 GitHub Pages can display the static, read-only product catalog and product detail
 pages. It cannot run the Node.js API, SQLite database, checkout, accounts, reviews,
-or admin tools. The `Deploy catalog to GitHub Pages` workflow builds and publishes
+or admin tools. The `Deploy DNA GENEIE` workflow builds and publishes
 the catalog when changes are pushed to `main`. Enable **Settings → Pages → Build
 and deployment → GitHub Actions** in the repository.
 
